@@ -8,8 +8,8 @@ public class Snippet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String email;
-    private String password;
+    private String language;
+    private String code;
 
     public Long getId() {
         return id;
@@ -19,28 +19,28 @@ public class Snippet {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    public String getPassword() {
-        return password;
+    public String getCode() {
+        return code;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override
     public String toString() {
-        return "Snippet{" +
+        return "User{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", language='" + language + '\'' +
+                ", code='" + code + '\'' +
                 '}';
     }
 }
