@@ -15,8 +15,7 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    @Autowired
-    UserRepository userRepository;
+
 
 
     @PostMapping

@@ -54,9 +54,12 @@ public class SnippetService {
         snippetRepository.deleteById(id);
     }
 
-    public String getSnippetByLanguage(String lang) {
-        Optional<Snippet> snippet = snippetRepository.findByLanguage(lang);
-        return snippet.map(Snippet::getLanguage).orElse("Snippet not available for the specified language.");
+    public List<Snippet> getSnippetsByLanguage(String lang) {
+        List<Snippet> snippets = snippetRepository.findAllByLanguage(lang);
+        if (snippets.isEmpty()) {
+            throw new RuntimeException("No snippets available for the specified language.");
+        }
+        return snippets;
     }
 
 }
