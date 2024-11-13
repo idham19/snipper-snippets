@@ -6,6 +6,7 @@ import com.snipper.snippets.model.Snippet;
 import com.snipper.snippets.repository.SnippetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +22,10 @@ public class SnippetService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public void cleanUpSnippetTable() {
         jdbcTemplate.execute("SET SQL_SAFE_UPDATES = 0;");
         jdbcTemplate.execute("DELETE FROM snippets");
@@ -32,8 +37,15 @@ public class SnippetService {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Snippet> snippets = objectMapper.readValue(inputStream, new TypeReference<List<Snippet>>() {
         });
-        for (Snippet snippet : snippets
-        ) {
+        for (Snippet snippet : snippets) {
+            if (!snippet.getCode().isEmpty()) {
+                String hashCodeSnippet = passwordEncoder.encode(snippet.getCode());
+                snippet.setCode(hashCodeSnippet);
+            }
+            if (!snippet.getLanguage().isEmpty()) {
+                String hashLanguageSnippet = passwordEncoder.encode(snippet.getLanguage());
+                snippet.setLanguage(hashLanguageSnippet);
+            }
             snippetRepository.save(snippet);
         }
     }
