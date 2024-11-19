@@ -16,13 +16,11 @@ import java.util.Optional;
 
 @Service
 public class SnippetService {
-
     @Autowired
     SnippetRepository snippetRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private final PasswordEncoder passwordEncoder;
-
 
     @Autowired
     public SnippetService(SnippetRepository snippetRepository, PasswordEncoder passwordEncoder) {
@@ -46,10 +44,10 @@ public class SnippetService {
                 String hashCodeSnippet = passwordEncoder.encode(snippet.getCode());
                 snippet.setCode(hashCodeSnippet);
             }
-            if (!snippet.getLanguage().isEmpty()) {
-                String hashLanguageSnippet = passwordEncoder.encode(snippet.getLanguage());
-                snippet.setLanguage(hashLanguageSnippet);
-            }
+//            if (!snippet.getLanguage().isEmpty()) {
+//                String hashLanguageSnippet = passwordEncoder.encode(snippet.getLanguage());
+//                snippet.setLanguage(hashLanguageSnippet);
+//            }
             snippetRepository.save(snippet);
         }
     }
@@ -73,7 +71,7 @@ public class SnippetService {
     public List<Snippet> getSnippetsByLanguage(String lang) {
         List<Snippet> snippets = snippetRepository.findAllByLanguage(lang);
         if (snippets.isEmpty()) {
-            throw new RuntimeException("No snippets available for the specified language.");
+           System.out.println("No snippet available");
         }
         return snippets;
     }

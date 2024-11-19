@@ -31,9 +31,12 @@ public class SnippetController {
         return snippetService.findSnippetById(id);
     }
 
-    @GetMapping("/{lang}")
-    public List<Snippet> getSnippetByLanguage(String language) {
-        return snippetService.getSnippetsByLanguage(language);
+    @GetMapping("/languages/{lang}")
+    public List<Snippet> getSnippetByLanguage(@PathVariable("lang") String language) {
+        System.out.println("Language requested: " + language);
+        List<Snippet> snippets=snippetService.getSnippetsByLanguage(language);
+        System.out.println("Number of snippets found: " + snippets.size());
+        return snippets;
     }
 
 }

@@ -1,0 +1,37 @@
+package com.snipper.snippets.encryption_util;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
+public class EncryptionUtil {
+
+    static Dotenv dotenv = Dotenv.load();
+    private static final String SECRET_KEY = dotenv.get("ENCRYPTION_KEY");
+    private static final String ALGORITHM = "AES";
+
+    public static String encrypt(String data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        SecretKeySpec secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encryptedData = cipher.doFinal(data.getBytes());
+        return Base64.getEncoder().encodeToString(encryptedData);
+    }
+
+    ;
+
+    public static String decrypt() {
+
+
+        return "";
+    }
+
+
+}
