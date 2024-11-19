@@ -6,7 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +20,10 @@ import java.io.InputStream;
 @SpringBootApplication
 public class SnippetsApplication implements CommandLineRunner {
     @Autowired
+    @Lazy
     UserService userService;
     @Autowired
+    @Lazy
     SnippetService snippetService;
 
 
@@ -23,6 +31,18 @@ public class SnippetsApplication implements CommandLineRunner {
         SpringApplication.run(SnippetsApplication.class, args);
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().permitAll() // Allow all requests
+                );
+        return http.build();
+    }
 
     @Override
     public void run(String... args) {

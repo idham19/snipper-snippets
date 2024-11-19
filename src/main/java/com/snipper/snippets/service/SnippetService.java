@@ -6,7 +6,7 @@ import com.snipper.snippets.model.Snippet;
 import com.snipper.snippets.repository.SnippetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,10 +21,14 @@ public class SnippetService {
     SnippetRepository snippetRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public SnippetService(SnippetRepository snippetRepository, PasswordEncoder passwordEncoder) {
+        this.snippetRepository = snippetRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void cleanUpSnippetTable() {
         jdbcTemplate.execute("SET SQL_SAFE_UPDATES = 0;");

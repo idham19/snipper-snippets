@@ -6,6 +6,7 @@ import com.snipper.snippets.model.User;
 import com.snipper.snippets.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +22,15 @@ public class UserService {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    private PasswordEncoder passwordEncoder;
+
+    //    @Autowired
+//    BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
 
     public void cleanUpUserTable() {
         jdbcTemplate.execute("SET SQL_SAFE_UPDATES = 0;");
@@ -34,8 +44,15 @@ public class UserService {
         ObjectMapper objectMapper = new ObjectMapper();
         List<User> users = objectMapper.readValue(inputStream, new TypeReference<List<User>>() {
         });
-        for (User user : users
-        ) {
+        for (User user : users) {
+            if (!user.getEmail().isEmpty()) {
+                String hashedEmailUser = passwordEncoder.encode(user.getEmail());
+                user.setEmail(hashedEmailUser);
+            }
+            if (!user.getPassword().isEmpty()) {
+                String hashedPassword = passwordEncoder.encode(user.getPassword());
+                user.setPassword(hashedPassword);
+            }
             userRepository.save(user);
         }
     }
