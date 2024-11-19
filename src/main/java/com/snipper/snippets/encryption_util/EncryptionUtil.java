@@ -15,7 +15,7 @@ public class EncryptionUtil {
 
     static Dotenv dotenv = Dotenv.load();
     private static final String SECRET_KEY = dotenv.get("ENCRYPTION_KEY");
-    private static final String ALGORITHM = "AES";
+    private static final String ALGORITHM = dotenv.get("ALGORITHM_VALUE");
 
     public static String encrypt(String data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -27,10 +27,13 @@ public class EncryptionUtil {
 
     ;
 
-    public static String decrypt() {
-
-
-        return "";
+    public static String decrypt(String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        SecretKeySpec secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        cipher.init(cipher.DECRYPT_MODE, secretKey);
+        byte[] decodedData = Base64.getDecoder().decode(encryptedData);
+        byte[] originalData = cipher.doFinal(decodedData);
+        return new String(originalData);
     }
 
 
