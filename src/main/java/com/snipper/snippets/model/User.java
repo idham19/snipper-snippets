@@ -2,6 +2,8 @@ package com.snipper.snippets.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -10,6 +12,9 @@ public class User {
     private Long id;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Snippet> snippets;
 
     public Long getId() {
         return id;
@@ -33,5 +38,12 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public List<Snippet> getSnippets() {
+        return snippets;
+    }
+
+    public void setSnippets(List<Snippet> snippets) {
+        this.snippets = snippets;
     }
 }

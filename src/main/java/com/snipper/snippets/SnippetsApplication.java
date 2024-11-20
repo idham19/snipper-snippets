@@ -1,5 +1,6 @@
 package com.snipper.snippets;
 
+import com.snipper.snippets.encryption_util.EncryptionUtil;
 import com.snipper.snippets.service.SnippetService;
 import com.snipper.snippets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,12 @@ public class SnippetsApplication implements CommandLineRunner {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public EncryptionUtil encryptionUtil() {
+        return new EncryptionUtil();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -48,12 +55,12 @@ public class SnippetsApplication implements CommandLineRunner {
     public void run(String... args) {
         try {
             // Clean tables before injecting data
-            userService.cleanUpUserTable();
             snippetService.cleanUpSnippetTable();
+            userService.cleanUpUserTable();
 
             // Load JSON files from classpath (assets folder in resources)
-            ClassPathResource snippetResource = new ClassPathResource("snippetData.json");
             ClassPathResource userResource = new ClassPathResource("userData.json");
+            ClassPathResource snippetResource = new ClassPathResource("snippetData.json");
 
             // Check if the resources exist
             if (!snippetResource.exists()) {
@@ -66,18 +73,17 @@ public class SnippetsApplication implements CommandLineRunner {
             }
 
             // Read the JSON data
-            try (InputStream snippetStream = snippetResource.getInputStream()) {
-                snippetService.importJsonData(snippetStream);
-            } catch (IOException e) {
-                System.out.println("Error reading device JSON: " + e.getMessage());
-            }
-
             try (InputStream userStream = userResource.getInputStream()) {
                 userService.importJsonData(userStream);
             } catch (IOException e) {
                 System.out.println("Error reading user JSON: " + e.getMessage());
             }
 
+            try (InputStream snippetStream = snippetResource.getInputStream()) {
+                snippetService.importJsonData(snippetStream);
+            } catch (IOException e) {
+                System.out.println("Error reading device JSON: " + e.getMessage());
+            }
             System.out.println("Data imported from JSON files successfully.");
         } catch (Exception e) {
             System.out.println("An error occurred during the data import process: " + e.getMessage());

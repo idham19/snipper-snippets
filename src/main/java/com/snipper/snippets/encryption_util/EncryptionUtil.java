@@ -1,6 +1,8 @@
 package com.snipper.snippets.encryption_util;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -13,7 +15,18 @@ import java.util.Base64;
 
 public class EncryptionUtil {
 
-    static Dotenv dotenv = Dotenv.load();
+    //    static Dotenv dotenv = Dotenv.load();
+    @Autowired
+    private static Environment environment;
+
+    public static String getPathVariable() {
+        String variable = environment.getProperty("env.path");
+        return variable;
+    }
+
+    static Dotenv dotenv = Dotenv.configure()
+            .directory("C:\\Users\\mahdi\\OneDrive\\Desktop\\All Documents files\\Multiverse repos\\snippets\\snippets\\.env") // Set the directory where `.env` resides
+            .load();
     private static final String SECRET_KEY = dotenv.get("ENCRYPTION_KEY");
     private static final String ALGORITHM = dotenv.get("ALGORITHM_VALUE");
 
@@ -25,8 +38,6 @@ public class EncryptionUtil {
         return Base64.getEncoder().encodeToString(encryptedData);
     }
 
-    ;
-
     public static String decrypt(String encryptedData) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         SecretKeySpec secretKey = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
@@ -35,6 +46,4 @@ public class EncryptionUtil {
         byte[] originalData = cipher.doFinal(decodedData);
         return new String(originalData);
     }
-
-
 }
