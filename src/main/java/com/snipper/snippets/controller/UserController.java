@@ -5,6 +5,11 @@ import com.snipper.snippets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUser() {
+    public List<User> getAllUser() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         return userService.findAllUsers();
     }
 

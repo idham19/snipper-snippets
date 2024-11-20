@@ -14,16 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class EncryptionUtil {
-
-    //    static Dotenv dotenv = Dotenv.load();
     @Autowired
     private static Environment environment;
-
-    public static String getPathVariable() {
-        String variable = environment.getProperty("env.path");
-        return variable;
-    }
-
     static Dotenv dotenv = Dotenv.configure()
             .directory("C:\\Users\\mahdi\\OneDrive\\Desktop\\All Documents files\\Multiverse repos\\snippets\\snippets\\.env") // Set the directory where `.env` resides
             .load();

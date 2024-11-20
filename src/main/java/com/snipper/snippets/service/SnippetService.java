@@ -71,17 +71,34 @@ public class SnippetService {
 
     public List<Snippet> findAllSnippets() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         List<Snippet> snippets = snippetRepository.findAll();
-        for(Snippet snippet :snippets){
-            snippet.setLanguage(EncryptionUtil.decrypt(snippet.getLanguage()));
-            snippet.setCode(EncryptionUtil.decrypt(snippet.getCode()));
+        for (Snippet snippet : snippets) {
+            snippet.setLanguage(encryptionUtil.decrypt(snippet.getLanguage()));
+            snippet.setCode(encryptionUtil.decrypt(snippet.getCode()));
         }
         return snippetRepository.findAll();
     }
 
     public Optional<Snippet> findSnippetById(Long id) {
         Optional<Snippet> snippet = snippetRepository.findById(id);
-
-        return snippetRepository.findById(id);
+        snippet.ifPresent(s -> {
+            if (s.getLanguage() != null && s.getCode() != null) {
+                try {
+                    s.setCode(EncryptionUtil.decrypt(s.getCode()));
+                    s.setLanguage(EncryptionUtil.decrypt(s.getLanguage()));
+                } catch (NoSuchPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeyException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalBlockSizeException e) {
+                    throw new RuntimeException(e);
+                } catch (BadPaddingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        return snippet;
     }
 
     public Snippet addSnippet(Snippet snippet) {
