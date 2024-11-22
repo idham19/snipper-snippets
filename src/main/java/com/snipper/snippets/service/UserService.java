@@ -34,10 +34,10 @@ public class UserService {
     //    @Autowired
 //    BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,EncryptionUtil encryptionUtil) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EncryptionUtil encryptionUtil) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.encryptionUtil=encryptionUtil;
+        this.encryptionUtil = encryptionUtil;
     }
 
     public void cleanUpUserTable() {
@@ -69,7 +69,7 @@ public class UserService {
 
     public List<User> findAllUsers() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         List<User> users = userRepository.findAll();
-        for(User user :users){
+        for (User user : users) {
             user.setEmail(EncryptionUtil.decrypt(user.getEmail()));
         }
         return users;
@@ -77,32 +77,31 @@ public class UserService {
 
     public Optional<User> findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-         user.ifPresent(u->{
-             if(u.getEmail() !=null){
-                 try {
-                     u.setEmail(EncryptionUtil.decrypt(u.getEmail()));
-                 } catch (NoSuchPaddingException e) {
-                     throw new RuntimeException(e);
-                 } catch (NoSuchAlgorithmException e) {
-                     throw new RuntimeException(e);
-                 } catch (InvalidKeyException e) {
-                     throw new RuntimeException(e);
-                 } catch (IllegalBlockSizeException e) {
-                     throw new RuntimeException(e);
-                 } catch (BadPaddingException e) {
-                     throw new RuntimeException(e);
-                 }
-             }
-         });
+        user.ifPresent(u -> {
+            if (u.getEmail() != null) {
+                try {
+                    u.setEmail(EncryptionUtil.decrypt(u.getEmail()));
+                } catch (NoSuchPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidKeyException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalBlockSizeException e) {
+                    throw new RuntimeException(e);
+                } catch (BadPaddingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         return user;
     }
 
     public User addUser(User user) {
         return userRepository.save(user);
     }
+
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
-
-
 }

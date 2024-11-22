@@ -1,4 +1,4 @@
-package com.snipper.snippets.configu;
+package com.snipper.snippets.config_util;
 
 import com.snipper.snippets.encryption_util.EncryptionUtil;
 import org.springframework.context.annotation.Bean;

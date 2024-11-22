@@ -1,4 +1,4 @@
-package com.snipper.snippets.configu;
+package com.snipper.snippets.config_util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
