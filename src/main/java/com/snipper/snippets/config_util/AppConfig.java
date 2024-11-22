@@ -1,6 +1,7 @@
 package com.snipper.snippets.config_util;
 
 import com.snipper.snippets.encryption_util.EncryptionUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +29,13 @@ public class AppConfig {
                         .anyRequest().permitAll() // Allow all requests
                 );
         return http.build();
+    }
+    @Value("${secret.key}")
+    private String secretKey;
+
+    @Bean
+    public String secretKey() {
+        return secretKey;
     }
 
 }
