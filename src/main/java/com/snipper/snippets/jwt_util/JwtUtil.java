@@ -46,12 +46,22 @@ public class JwtUtil {
                 .build();
         Claims claims = parser.parseClaimsJws(token).getBody();
 
-        return claims.get("sub", String.class); // Extract the 'sub' claim
+        return claims.get("sub", String.class);
     }
 
     public Date extractExpirationDate(String token) {
         JwtParser parser = Jwts.parserBuilder().setSigningKey(getKey()).build();
         Claims claims = parser.parseClaimsJws(token).getBody();
         return claims.getExpiration();
+    }
+
+    public boolean isTokenExpired(String token) {
+        return extractExpirationDate(token).before(new Date());
+
+    }
+
+    public boolean isTokenValid(String token, String username) {
+        String tokenUsername = extractUsername(token);
+        return (username.equals(tokenUsername) && !isTokenExpired(token));
     }
 }
