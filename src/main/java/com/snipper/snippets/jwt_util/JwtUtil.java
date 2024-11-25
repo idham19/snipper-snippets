@@ -14,10 +14,10 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     @Value("${secret.key}")
-    private String secretKey;
+    private final String secretKey;
     private SecretKey key;
 
-    private long expirationDate = 24 * 60 * 60 * 1000; // will expire in 24h ;
+    private final long expirationDate = 24 * 60 * 60 * 1000; // will expire in 24h ;
 
     private SecretKey getKey() {
         if (key == null) {
@@ -30,22 +30,28 @@ public class JwtUtil {
         this.secretKey = secretKey;
     }
 
+    //method to generate token
     public String generateToken(String username) {
         return Jwts.builder()
-                .claim("sub", username).claim("iat", new Date())
-                .claim("exp", new Date((System.currentTimeMillis() + expirationDate)))
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationDate))
                 .signWith(getKey())
                 .compact();
     }
 
     public String extractUsername(String token) {
         JwtParser parser = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getKey())
                 .build();
-
         Claims claims = parser.parseClaimsJws(token).getBody();
 
         return claims.get("sub", String.class); // Extract the 'sub' claim
     }
 
+    public Date extractExpirationDate(String token) {
+        JwtParser parser = Jwts.parserBuilder().setSigningKey(getKey()).build();
+        Claims claims = parser.parseClaimsJws(token).getBody();
+        return claims.getExpiration();
+    }
 }
