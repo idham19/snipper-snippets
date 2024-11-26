@@ -1,8 +1,12 @@
 package com.snipper.snippets.controller;
 
+import com.snipper.snippets.jwt_util.JwtUtil;
 import com.snipper.snippets.model.User;
+import com.snipper.snippets.repository.UserRepository;
 import com.snipper.snippets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.BadPaddingException;
@@ -20,9 +24,24 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    JwtUtil jwtUtil;
+
     @PostMapping
     public User addUser(@RequestBody User user) {
         return userService.addUser(user);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User userData) {
+        Optional<User> foundUser = userRepository.findByEmail(userData.getEmail());
+        if (foundUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exist");
+        }
+        userService.addUser(userData);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
     @GetMapping
