@@ -14,6 +14,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,18 @@ public class UserController {
         userService.addUser(userData);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Optional<User> foundUser = userRepository.findByEmail(user.getEmail());
+        if (foundUser.isPresent() && foundUser.get().getPassword().matches(user.getPassword())) {
+            return ResponseEntity.ok(Collections.singletonMap("message", "Login successful"));
+        }
+        String token = jwtUtil.generateToken(user.getEmail());
+
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    }
+
 
     @GetMapping
     public List<User> getAllUser() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
