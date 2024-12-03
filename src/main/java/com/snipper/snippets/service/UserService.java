@@ -81,15 +81,8 @@ public class UserService {
             if (u.getEmail() != null) {
                 try {
                     u.setEmail(EncryptionUtil.decrypt(u.getEmail()));
-                } catch (NoSuchPaddingException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidKeyException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalBlockSizeException e) {
-                    throw new RuntimeException(e);
-                } catch (BadPaddingException e) {
+                } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException |
+                         IllegalBlockSizeException | BadPaddingException e) {
                     throw new RuntimeException(e);
                 }
             }
