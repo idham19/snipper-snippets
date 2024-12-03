@@ -28,7 +28,7 @@ public class SnippetService {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     UserRepository userRepository;
-    private EncryptionUtil encryptionUtil;
+    private final EncryptionUtil encryptionUtil;
 
     @Autowired
     public SnippetService(SnippetRepository snippetRepository, EncryptionUtil encryptionUtil) {
@@ -49,11 +49,11 @@ public class SnippetService {
         });
         for (Snippet snippet : snippets) {
             if (!snippet.getCode().isEmpty()) {
-                String hashCodeSnippet = encryptionUtil.encrypt(snippet.getCode());
+                String hashCodeSnippet = EncryptionUtil.encrypt(snippet.getCode());
                 snippet.setCode(hashCodeSnippet);
             }
             if (!snippet.getLanguage().isEmpty()) {
-                String hashLanguageSnippet = encryptionUtil.encrypt(snippet.getLanguage());
+                String hashLanguageSnippet = EncryptionUtil.encrypt(snippet.getLanguage());
                 snippet.setLanguage(hashLanguageSnippet);
             }
 

@@ -7,6 +7,7 @@ import com.snipper.snippets.model.User;
 import com.snipper.snippets.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,7 @@ public class UserService {
     JdbcTemplate jdbcTemplate;
     private PasswordEncoder passwordEncoder;
 
-    //    @Autowired
-//    BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EncryptionUtil encryptionUtil) {
         this.passwordEncoder = passwordEncoder;

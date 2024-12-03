@@ -1,6 +1,6 @@
 package com.snipper.snippets.controller;
 
-import com.snipper.snippets.jwt_util.JwtUtil;
+//import com.snipper.snippets.jwt_util.JwtUtil;
 import com.snipper.snippets.model.User;
 import com.snipper.snippets.repository.UserRepository;
 import com.snipper.snippets.service.UserService;
@@ -27,8 +27,8 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    JwtUtil jwtUtil;
+//    @Autowired
+//    JwtUtil jwtUtil;
 
     @PostMapping
     public User addUser(@RequestBody User user) {
@@ -50,7 +50,7 @@ public class UserController {
         if (foundUser.isPresent() && foundUser.get().getPassword().matches(user.getPassword())) {
             return ResponseEntity.ok(Collections.singletonMap("message", "Login successful"));
         }
-        String token = jwtUtil.generateToken(user.getEmail());
+//        String token = jwtUtil.generateToken(user.getEmail());
 
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");

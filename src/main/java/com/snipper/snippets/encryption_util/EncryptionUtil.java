@@ -1,6 +1,7 @@
 package com.snipper.snippets.encryption_util;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -11,6 +12,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+
+@Component
 public class EncryptionUtil {
     static Dotenv dotenv = Dotenv.configure()
             .directory("C:\\Users\\mahdi\\OneDrive\\Desktop\\All Documents files\\Multiverse repos\\snippets\\snippets\\.env") // Set the directory where `.env` resides
