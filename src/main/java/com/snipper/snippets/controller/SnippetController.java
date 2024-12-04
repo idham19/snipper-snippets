@@ -4,8 +4,6 @@ package com.snipper.snippets.controller;
 import com.snipper.snippets.model.Snippet;
 import com.snipper.snippets.service.SnippetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/snippets")
+@RequestMapping("/api/snippets")
 public class SnippetController {
 
     @Autowired
@@ -31,13 +29,9 @@ public class SnippetController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllSnippets(@AuthenticationPrincipal OAuth2User principal)
-            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Please log in.");
-        }
+    public List<Snippet> getAllSnippets() throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         List<Snippet> snippets = snippetService.findAllSnippets();
-        return ResponseEntity.ok(snippets);
+        return snippets;
     }
 
 

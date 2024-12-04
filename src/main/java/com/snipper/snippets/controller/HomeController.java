@@ -10,4 +10,8 @@ public class HomeController {
     public String home() {
         return "Welcome to home Page";
     }
+    @GetMapping("/secure")
+    public String secure(){
+        return  "welcome to the secure content";
+    }
 }
